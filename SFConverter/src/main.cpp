@@ -22,6 +22,12 @@ int main()
 {
 
     std::string srcPath = "F:/AD/CD/";
+
+    if (!fs::exists("../output/"))
+    {
+        fs::create_directory("../output/");
+    }
+
     for (auto& entry : fs::recursive_directory_iterator(srcPath))
     {
         if (!fs::is_directory(entry.status()))
