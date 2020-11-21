@@ -1,0 +1,16 @@
+cmake_minimum_required(VERSION 3.7 FATAL_ERROR)
+cmake_policy(VERSION 3.7)
+
+project(SFDataConverter)
+
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/CMake")
+
+
+ADD_DEFINITIONS(-DGLFW_INCLUDE_VULKAN)
+
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${SFDataConverter}/bin")
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${SFDataConverter}/lib")
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${SFDataConverter}/lib")
+
+
+add_subdirectory(SFConverter)
