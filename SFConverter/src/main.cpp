@@ -20,14 +20,24 @@
 #include <tiny_gltf.h>
 
 namespace fs = std::experimental::filesystem ;
-int main()
+int main(int argc, char *argv[])
 {
 
-    std::string srcPath = "F:/AD/CD/";
-
-    if (!fs::exists("../output/"))
+    if (argc < 3)
     {
-        fs::create_directory("../output/");
+        printf("not enough arguments !");
+        return 1;
+    }
+    std::string srcPath = "F:\\AD\\CD\\";
+    std::string destination = "..\\output";
+
+    srcPath = argv[1];
+    destination = argv[2];
+    destination += "\\";
+
+    if (!fs::exists(destination))
+    {
+        fs::create_directory(destination);
     }
 
     for (auto& entry : fs::recursive_directory_iterator(srcPath))
@@ -43,7 +53,7 @@ int main()
             std::string relPath = directory;
             relPath.erase(relPath.begin(), relPath.begin() + (srcPath.length()-1));
 
-            std::string outPath = "..\\output" + relPath + "\\" ;
+            std::string outPath = destination + relPath + "\\" ;
 
             if (extension == ".IMB")
             {
@@ -114,8 +124,8 @@ int main()
             {
                 if (entry.path().stem().string() == "12-4-ANF") continue;//skip this one, corrupt ?
 
-                if (directoryname == "ROOM") continue;//skip small room animatons
-                if (directoryname == "DESKTOP") continue;//skip small background animatons
+                if (directoryname == "ROOM") continue;      //skip small room animatons
+                if (directoryname == "DESKTOP") continue;   //skip small background animatons
 
                 printf("%s\n", filename.c_str());
                 std::string fullpath = directory;
@@ -192,12 +202,12 @@ int main()
         }
         else
         {
-            if (!fs::exists("../output/" + entry.path().string()))
+            if (!fs::exists(destination + entry.path().string()))
             {
                 std::string relPath = entry.path().string();
                 relPath.erase(relPath.begin(), relPath.begin() + srcPath.length());
 
-                fs::create_directory("../output/" + relPath);
+                fs::create_directory(destination + relPath);
             }
         }
     }
