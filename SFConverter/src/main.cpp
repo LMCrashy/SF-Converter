@@ -48,65 +48,65 @@ int main()
             if (extension == ".IMB")
             {
                 if (!fs::exists(outPath + stem + ".png"))
-            {
-                printf("%s\n", filename.c_str());
-                bool hasPalette = false;
-                std::string fullpath = directory;
-                fullpath += "\\"+stem;
+                {
+                    printf("%s\n", filename.c_str());
+                    bool hasPalette = false;
+                    std::string fullpath = directory;
+                    fullpath += "\\" + stem;
 
-                //if (fs::exists(fullpath + ".PAL"))
-                //{
-                //    hasPalette = true;
-                //}
+                    //if (fs::exists(fullpath + ".PAL"))
+                    //{
+                    //    hasPalette = true;
+                    //}
 
-                IMBLoader loader;
-                loader.load(fullpath.c_str(), hasPalette);
-                void* data = loader.imgdata.data();
-                stbi_write_png((outPath + stem + ".png").c_str(), loader.width, loader.height, 4, data, loader.width * 4);
-            }
+                    IMBLoader loader;
+                    loader.load(fullpath.c_str(), hasPalette);
+                    void* data = loader.imgdata.data();
+                    stbi_write_png((outPath + stem + ".png").c_str(), loader.width, loader.height, 4, data, loader.width * 4);
+                }
             }
             else if (extension == ".R16")
             {
                 if (!fs::exists(outPath + stem + ".png"))
-            {
-                printf("%s\n", filename.c_str());
-                std::string fullpath = directory;
-                fullpath += "\\" +filename;
+                {
+                    printf("%s\n", filename.c_str());
+                    std::string fullpath = directory;
+                    fullpath += "\\" + filename;
 
-                R16Loader loader;
-                loader.load(fullpath.c_str());
-                void* data = loader.imgdata.data();
-                stbi_write_png((outPath + stem + ".png").c_str(), loader.width, loader.height, 4, data, loader.width * 4);
-            }
+                    R16Loader loader;
+                    loader.load(fullpath.c_str());
+                    void* data = loader.imgdata.data();
+                    stbi_write_png((outPath + stem + ".png").c_str(), loader.width, loader.height, 4, data, loader.width * 4);
+                }
             }
             else if (extension == ".PCX")
             {
                 if (!fs::exists(outPath + stem + ".png"))
-            {
-                printf("%s\n", filename.c_str());
-                std::string fullpath = directory;
-                fullpath += "\\" + filename;
+                {
+                    printf("%s\n", filename.c_str());
+                    std::string fullpath = directory;
+                    fullpath += "\\" + filename;
 
-                PCXLoader loader;
-                loader.load(fullpath.c_str());
-                void* data = loader.imgdata.data();
-                stbi_write_png((outPath + stem + ".png").c_str(), loader.width, loader.height, 4, data, loader.width * 4);
-            }
+                    PCXLoader loader;
+                    loader.load(fullpath.c_str());
+                    void* data = loader.imgdata.data();
+                    stbi_write_png((outPath + stem + ".png").c_str(), loader.width, loader.height, 4, data, loader.width * 4);
+                }
             }
             else if (extension == ".MOD")
             {
                 if (!fs::exists(outPath + stem + ".gltf"))
-            {
-                std::string fullpath = directory;
-                fullpath += "\\" + filename;
+                {
+                    std::string fullpath = directory;
+                    fullpath += "\\" + filename;
 
-                MODLoader loader;
-                loader.load(fullpath.c_str());
-                printf("%s, scale : %f\n", filename.c_str(), loader.scale);
+                    MODLoader loader;
+                    loader.load(fullpath.c_str());
+                    printf("%s, scale : %f\n", filename.c_str(), loader.scale);
 
-                tinygltf::TinyGLTF tinyGLTF;
+                    tinygltf::TinyGLTF tinyGLTF;
 
-                tinyGLTF.WriteGltfSceneToFile(&loader.toGlTF2("../../"), outPath + stem + ".gltf", false, false);
+                    tinyGLTF.WriteGltfSceneToFile(&loader.toGlTF2("../../"), outPath + stem + ".gltf", false, false);
                 }
                 
             }
@@ -153,15 +153,30 @@ int main()
             else if (extension == ".PCM")
             {
                 if (!fs::exists(outPath + stem + ".wav"))
+                {
+                    printf("%s\n", filename.c_str());
+                    std::string fullpath = directory;
+
+                    fullpath += "\\" + stem;
+
+                    PCMToWave loader;
+                    loader.load(fullpath.c_str(), true);
+                    loader.saveToWave((outPath + stem + ".wav").c_str());
+                }
+            }
+            else if (extension == ".PCL")
             {
-                printf("%s\n", filename.c_str());
-                std::string fullpath = directory;
+                if (!fs::exists(outPath + stem + ".wav"))
+                {
+                    printf("%s\n", filename.c_str());
+                    std::string fullpath = directory;
 
-                fullpath += "\\" + stem;
+                    fullpath += "\\" + stem;
 
-                PCMToWave loader;
-                loader.load(fullpath.c_str(), true);
-                loader.saveToWave((outPath + stem + ".wav").c_str());
+                    PCMToWave loader;
+                    loader.load(fullpath.c_str(), false);
+                    loader.saveToWave((outPath + stem + ".wav").c_str());
+                }
             }
         }
         else

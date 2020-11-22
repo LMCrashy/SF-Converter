@@ -23,7 +23,7 @@ struct PCMToWave
     PCMHeader           header2;
     bool				mono;
     unsigned int		samplerate;
-    std::vector<char>	sounddataMono;//16bit for stereo, 8 for mono, 1. word = left, 2. word = right, 3. word = left etc., mono = no mixing
+    std::vector<char>	sounddata;  //8 for mono, 16bit for stereo, interleaved
 
     void load(const char* file, bool mono);
     void saveToWave(const char* out);
