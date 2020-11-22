@@ -1,3 +1,5 @@
+#pragma once
+
 struct Except : public std::exception
 {
    std::string str;

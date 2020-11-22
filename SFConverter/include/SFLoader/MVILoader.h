@@ -1,4 +1,8 @@
 #pragma once
+
+#include "Except.h"
+#include <fstream>
+
 class MVILoader
 {
 	struct Item
