@@ -47,6 +47,8 @@ int main()
 
             if (extension == ".IMB")
             {
+                if (!fs::exists(outPath + stem + ".png"))
+            {
                 printf("%s\n", filename.c_str());
                 bool hasPalette = false;
                 std::string fullpath = directory;
@@ -62,7 +64,10 @@ int main()
                 void* data = loader.imgdata.data();
                 stbi_write_png((outPath + stem + ".png").c_str(), loader.width, loader.height, 4, data, loader.width * 4);
             }
+            }
             else if (extension == ".R16")
+            {
+                if (!fs::exists(outPath + stem + ".png"))
             {
                 printf("%s\n", filename.c_str());
                 std::string fullpath = directory;
@@ -73,7 +78,10 @@ int main()
                 void* data = loader.imgdata.data();
                 stbi_write_png((outPath + stem + ".png").c_str(), loader.width, loader.height, 4, data, loader.width * 4);
             }
+            }
             else if (extension == ".PCX")
+            {
+                if (!fs::exists(outPath + stem + ".png"))
             {
                 printf("%s\n", filename.c_str());
                 std::string fullpath = directory;
@@ -84,7 +92,10 @@ int main()
                 void* data = loader.imgdata.data();
                 stbi_write_png((outPath + stem + ".png").c_str(), loader.width, loader.height, 4, data, loader.width * 4);
             }
+            }
             else if (extension == ".MOD")
+            {
+                if (!fs::exists(outPath + stem + ".gltf"))
             {
                 std::string fullpath = directory;
                 fullpath += "\\" + filename;
@@ -96,6 +107,7 @@ int main()
                 tinygltf::TinyGLTF tinyGLTF;
 
                 tinyGLTF.WriteGltfSceneToFile(&loader.toGlTF2("../../"), outPath + stem + ".gltf", false, false);
+                }
                 
             }
             else if (extension == ".MVI")
@@ -108,7 +120,7 @@ int main()
                 printf("%s\n", filename.c_str());
                 std::string fullpath = directory;
                 fullpath += "\\" + stem;
-                if (!fs::exists(outPath + stem + ".mp4"))
+                if (!fs::exists(outPath + stem + ".mp4") && !fs::exists(outPath + stem + "_0.png"))
                 {
                     MVILoader loader;
                     loader.load(fullpath.c_str());
@@ -139,6 +151,8 @@ int main()
                 }
             }
             else if (extension == ".PCM")
+            {
+                if (!fs::exists(outPath + stem + ".wav"))
             {
                 printf("%s\n", filename.c_str());
                 std::string fullpath = directory;
