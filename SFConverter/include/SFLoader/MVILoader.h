@@ -36,10 +36,13 @@ public:
 	std::vector<unsigned char>	indexdata;
 	std::vector<unsigned int>	imgdata;
 	std::vector<short>			sounddata;
+	std::vector<char>			sounddata8bits;
 
 	bool has_finished(void) const				{ return current == items.end(); }
 	void set_to_frame(int frameoffset);
 	void load(const char*);
 	void decode_next_frame(void);
 	void prefetch_sound();
+
+    void writeAudioToWav(const char* out);
 };

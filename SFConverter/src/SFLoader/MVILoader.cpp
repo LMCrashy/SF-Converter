@@ -5,6 +5,7 @@
 #include "Except.h"
 #include "PALLoader.h"
 #include "MVILoader.h"
+#include "PCMToWave.h"
 
 struct Header
 {
@@ -20,6 +21,23 @@ struct Header
 	int	audio_num_channels;
 	int	audio_samplerate;
 	int	audio_bits;
+};
+
+
+struct WAVE_HEADER
+{
+    char Chunk[4];
+    unsigned int ChunkSize;
+    char Sub_chunk1ID[8];
+    unsigned int Sub_chunk1Size;
+    unsigned short AudioFormat;
+    unsigned short NumChannels;
+    unsigned int SampleRate;
+    unsigned int ByteRate;
+    unsigned short BlockAlign;
+    unsigned short BitsPerSample;
+    char Sub_chunk2ID[4];
+    unsigned int Sub_chunk2Size;
 };
 
 struct VideoDiffHead
@@ -173,6 +191,7 @@ void MVILoader::load(const char* _name)
 void MVILoader::prefetch_sound()
 {
 	sounddata.clear();
+    sounddata8bits.clear();
 
 	if(!has_audio)
 		return;
@@ -218,6 +237,7 @@ void MVILoader::prefetch_sound()
 	std::vector<unsigned char>::iterator it_right	= right.begin();
 
 	sounddata.reserve((left.size() + right.size()) * 2);
+    sounddata8bits.reserve((left.size() + right.size()) * 2);
 
 	bool l,r;
 	while((l = (it_left != left.end())) && (r = (it_right != right.end())) && (l || r))
@@ -227,12 +247,14 @@ void MVILoader::prefetch_sound()
 			char m = (char)*it_left++;
 			short value = m * 256;
 			sounddata.push_back(value);
+            sounddata8bits.push_back(m);
 		}
 		if(r)
 		{
 			char m = (char)*it_right++;
 			short value = m * 256;
 			sounddata.push_back(value);
+            sounddata8bits.push_back(m);
 		}
 	}
 	file.seekg(old);
@@ -400,4 +422,39 @@ void MVILoader::set_to_frame(int frameoffset)
 	}
 	else
 		file.seekg(current->offset + payload_offset);
+}
+
+void MVILoader::writeAudioToWav(const char* out)
+{
+    prefetch_sound();
+    if (sounddata8bits.size() == 0) return;
+    PCMHeader pcmHeader;
+    pcmHeader.length = sounddata8bits.size();
+    pcmHeader.samplerate = audio_samplerate / 2;
+
+    WAVE_HEADER waveheader;
+    strcpy(waveheader.Chunk, "RIFF");
+    waveheader.ChunkSize = sounddata8bits.size() + sizeof(PCMHeader) + 36;
+
+    strncpy(waveheader.Sub_chunk1ID, "WAVEfmt ", strlen("WAVEfmt "));
+    waveheader.Sub_chunk1Size = 16;
+    waveheader.AudioFormat = 1;
+    waveheader.NumChannels = 2;
+    waveheader.SampleRate = audio_samplerate / 2;
+    waveheader.BitsPerSample = 16;
+    waveheader.BlockAlign = waveheader.NumChannels * waveheader.BitsPerSample / 8;
+    waveheader.ByteRate = waveheader.SampleRate * waveheader.NumChannels * waveheader.BitsPerSample / 8;
+
+    // data sub-chunk
+    strncpy(waveheader.Sub_chunk2ID, "data", strlen("data"));
+    waveheader.Sub_chunk2Size = sounddata8bits.size() + sizeof(PCMHeader);
+
+
+    std::fstream file1(out, std::ios::out | std::ios::binary);
+
+    file1.write((char*)&waveheader, sizeof(waveheader));
+    file1.write((char*)&pcmHeader, sizeof(pcmHeader));
+    file1.write((char*)sounddata8bits.data(), waveheader.Sub_chunk2Size);
+
+    file1.close();
 }

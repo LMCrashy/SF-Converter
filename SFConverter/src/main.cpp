@@ -124,6 +124,17 @@ int main()
                 {
                     MVILoader loader;
                     loader.load(fullpath.c_str());
+
+                    std::string audioString;
+                    if (loader.has_audio)
+                    {
+                        loader.writeAudioToWav((outPath + stem + ".wav").c_str());
+                        if (loader.sounddata8bits.size() > 0)
+                        {
+                            audioString = " -i " + outPath + stem + ".wav ";
+                        }
+                    }
+
                     for (int i = 0; i < loader.frames; ++i)
                     {
                         loader.decode_next_frame();
@@ -139,7 +150,7 @@ int main()
                     {
                         //launch ffmpeg
                         std::string pattern = outPath + stem + "_%d.png";
-                        std::string command = "ffmpeg -r " + std::to_string(loader.fps) + " -i " + pattern + " -c:v libx264rgb -crf 0 " + outPath + stem + ".mp4";
+                        std::string command = "ffmpeg -r " + std::to_string(loader.fps) + " -i " + pattern + audioString +" -c:v libx264rgb -crf 0 " + outPath + stem + ".mp4";
                         system(command.c_str());
 
                         //remove temp files
