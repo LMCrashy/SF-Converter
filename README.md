@@ -2,7 +2,7 @@
 
 Licht !
 
-This is a batch-converter for Archimedan Dynasty / Schleichfarht resources.
+This is a batch-converter for Archimedan Dynasty / Schleichfahrt resources.
 
 
 Most of the file parsing is based on the SF-Reloaded loader https://sourceforge.net/p/schleichfahrt/code/ci/master/tree/
