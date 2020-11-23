@@ -6,6 +6,7 @@ This is a batch-converter for Archimedan Dynasty / Schleichfarht resources.
 
 
 Most of the file parsing is based on the SF-Reloaded loader https://sourceforge.net/p/schleichfahrt/code/ci/master/tree/
+Please refer to the Jealous Jellyfish topic for more details on the file formats http://jealousjellyfish.de/viewtopic.php?f=8&t=241&start=70
 
 ## Usage
 
@@ -17,7 +18,7 @@ SFConverter f:\AD\CD\ f:\AD\Converted
 
 ## Epected result
 
-+ R16, IMB, PCX files are converted into .PNG
++ R16, IMB, PCX, IMG files are converted into .PNG
 + PCM files are converted into .wav
 + MOD files are converted into glTF 2.0 format
 + MVI files
@@ -35,3 +36,4 @@ SFConverter f:\AD\CD\ f:\AD\Converted
 ## Thanks
 
 Thanks to the team that worked on SF-Reloaded, without their work I wouldn't have been able to do this.
+
