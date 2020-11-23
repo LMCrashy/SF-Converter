@@ -34,6 +34,7 @@ int main(int argc, char *argv[])
 
     srcPath = argv[1];
     destination = argv[2];
+    srcPath += "\\";
     destination += "\\";
 
     if (!fs::exists(destination))
