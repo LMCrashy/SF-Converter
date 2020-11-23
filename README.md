@@ -2,10 +2,11 @@
 
 Licht !
 
-This is a batch-converter for Archimedan Dynasty / Schleichfarht resources.
+This is a batch-converter for Archimedean Dynasty / Schleichfahrt resources.
 
 
 Most of the file parsing is based on the SF-Reloaded loader https://sourceforge.net/p/schleichfahrt/code/ci/master/tree/
+
 Please refer to the Jealous Jellyfish topic for more details on the file formats http://jealousjellyfish.de/viewtopic.php?f=8&t=241&start=70
 
 ## Usage
