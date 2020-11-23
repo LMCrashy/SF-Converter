@@ -66,8 +66,10 @@ void IMGLoader::load(const char* name, const PALLoader &pal)
 
 		case 0x401:
 		{
-			for(unsigned int counter = 0; counter < width * height; ++counter)
-				imgdata.push_back(pal.palette[in.get()]);
+            for (unsigned int counter = 0; counter < width * height; ++counter)
+            {
+                imgdata.push_back(pal.palette[in.get()]);
+            }
 		}break;
 
 		case 0x413:
@@ -97,7 +99,7 @@ void IMGLoader::load(const char* name, const PALLoader &pal)
 						unsigned char g = ((read >> 5) & 63) * 255 / 63;
 						unsigned char b = ((read >> 0) & 31) * 255 / 31;
 
-						unsigned color = (r << 16) | (g << 8) | b;
+						unsigned color = (b << 16) | (g << 8) | r;
 						if(color) color |= 0xFF000000;
 
 						imgdata.push_back(color);
