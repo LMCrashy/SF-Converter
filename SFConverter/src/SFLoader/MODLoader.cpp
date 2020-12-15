@@ -422,6 +422,8 @@ tinygltf::Model MODLoader::toGlTF2(const std::string & relPathToRoot)
 
     }
     model.buffers.push_back(buffer);
+
+    mesh.name = mName;
     model.meshes.push_back(mesh);
 
 
