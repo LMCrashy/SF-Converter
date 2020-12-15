@@ -218,6 +218,8 @@ tinygltf::Model MODLoader::toGlTF2(const std::string & relPathToRoot)
         posAccessor.count = subMesh.second.Vertices.size();
         posAccessor.type = TINYGLTF_TYPE_VEC3;
         posAccessor.byteOffset = 0;
+        posAccessor.minValues = { FLT_MAX,FLT_MAX,FLT_MAX };
+        posAccessor.maxValues = { -FLT_MAX,-FLT_MAX,-FLT_MAX };
 
         tinygltf::Accessor texcoordAccessor;
         texcoordAccessor.bufferView = baseIndex + 2;
@@ -241,11 +243,6 @@ tinygltf::Model MODLoader::toGlTF2(const std::string & relPathToRoot)
         indicesAccessor.byteOffset = 0;
 
         mesh.primitives.push_back(primitive);
-
-        model.accessors.push_back(indicesAccessor);
-        model.accessors.push_back(posAccessor);
-        model.accessors.push_back(texcoordAccessor);
-        model.accessors.push_back(normalAccessor);
 
 
         int indexBufferOffset = alignedOffset;
@@ -277,6 +274,14 @@ tinygltf::Model MODLoader::toGlTF2(const std::string & relPathToRoot)
             char* x = static_cast<char*>((void*)&vertex.x);
             char* y = static_cast<char*>((void*)&vertex.z);
             char* z = static_cast<char*>((void*)&vertex.y); //we flip z and y to have y up
+            
+            posAccessor.minValues[0] = std::min((double)vertex.x, posAccessor.minValues[0]);
+            posAccessor.minValues[1] = std::min((double)vertex.z, posAccessor.minValues[1]);
+            posAccessor.minValues[2] = std::min((double)vertex.y, posAccessor.minValues[2]);
+
+            posAccessor.maxValues[0] = std::max((double)vertex.x, posAccessor.maxValues[0]);
+            posAccessor.maxValues[1] = std::max((double)vertex.z, posAccessor.maxValues[1]);
+            posAccessor.maxValues[2] = std::max((double)vertex.y, posAccessor.maxValues[2]);
 
             buffer.data.push_back(x[0]);
             buffer.data.push_back(x[1]);
@@ -408,6 +413,10 @@ tinygltf::Model MODLoader::toGlTF2(const std::string & relPathToRoot)
         material.values["baseColorTexture"].json_double_value["index"] = subMeshId;
         model.materials.push_back(material);
 
+        model.accessors.push_back(indicesAccessor);
+        model.accessors.push_back(posAccessor);
+        model.accessors.push_back(texcoordAccessor);
+        model.accessors.push_back(normalAccessor);
 
         tinygltf::Image image;
         image.uri = relPathToRoot + "VFX/TEXTURE/" + subMesh.first + ".png";//todo
