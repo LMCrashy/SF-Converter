@@ -430,7 +430,7 @@ tinygltf::Model MODLoader::toGlTF2(const std::string & relPathToRoot)
     tinygltf::Node node;
     node.mesh = 0;
     node.name = mName;
-    float scaleF = 1.0f / (scale / 100.0f);
+    float scaleF = 1.0f /*/ (scale / 100.0f)*/;
     node.scale = { scaleF, scaleF, scaleF };
     model.nodes.push_back(node);
 
