@@ -157,9 +157,9 @@ tinygltf::Model MODLoader::toGlTF2(const std::string & relPathToRoot)
 
         //compute face normal
 
-        Vector A = points[face.indices[0].y];
-        Vector B = points[face.indices[1].y];
-        Vector C = points[face.indices[2].y];
+        Vector A = points[face.indices[0].y].toRightHandedYup();
+        Vector B = points[face.indices[1].y].toRightHandedYup();
+        Vector C = points[face.indices[2].y].toRightHandedYup();
 
         Vector normal = (C - A).cross(B - A);
 
@@ -167,7 +167,7 @@ tinygltf::Model MODLoader::toGlTF2(const std::string & relPathToRoot)
         short baseIndex = subMesh.LastIndex;
         for (int i = 0; i < face.indices.size(); ++i)
         {
-            vertices.push_back(points[face.indices[i].y]);
+            vertices.push_back(points[face.indices[i].y].toRightHandedYup());
 
             float u, v;
             u = (float)face.texturecoords[i].x / 256.f; //assume texture size is 256
@@ -182,9 +182,9 @@ tinygltf::Model MODLoader::toGlTF2(const std::string & relPathToRoot)
         for (int i = 0; i < face.indices.size() - 1; ++i)
         {
             //we need to duplicate vertices, because texcoords are stored in face
-            indices.push_back(baseIndex + i);
-            indices.push_back(baseIndex + i + 1);
             indices.push_back(baseIndex + 0);
+            indices.push_back(baseIndex + i + 1);
+            indices.push_back(baseIndex + i);
         }
  
         subMesh.Vertices.insert(subMesh.Vertices.end(),vertices.begin(), vertices.end());
@@ -272,16 +272,16 @@ tinygltf::Model MODLoader::toGlTF2(const std::string & relPathToRoot)
         for (Point vertex : subMesh.second.Vertices)
         {
             char* x = static_cast<char*>((void*)&vertex.x);
-            char* y = static_cast<char*>((void*)&vertex.z);
-            char* z = static_cast<char*>((void*)&vertex.y); //we flip z and y to have y up
+            char* y = static_cast<char*>((void*)&vertex.y);
+            char* z = static_cast<char*>((void*)&vertex.z);
             
             posAccessor.minValues[0] = std::min((double)vertex.x, posAccessor.minValues[0]);
-            posAccessor.minValues[1] = std::min((double)vertex.z, posAccessor.minValues[1]);
-            posAccessor.minValues[2] = std::min((double)vertex.y, posAccessor.minValues[2]);
+            posAccessor.minValues[1] = std::min((double)vertex.y, posAccessor.minValues[1]);
+            posAccessor.minValues[2] = std::min((double)vertex.z, posAccessor.minValues[2]);
 
             posAccessor.maxValues[0] = std::max((double)vertex.x, posAccessor.maxValues[0]);
-            posAccessor.maxValues[1] = std::max((double)vertex.z, posAccessor.maxValues[1]);
-            posAccessor.maxValues[2] = std::max((double)vertex.y, posAccessor.maxValues[2]);
+            posAccessor.maxValues[1] = std::max((double)vertex.y, posAccessor.maxValues[1]);
+            posAccessor.maxValues[2] = std::max((double)vertex.z, posAccessor.maxValues[2]);
 
             buffer.data.push_back(x[0]);
             buffer.data.push_back(x[1]);
@@ -346,8 +346,8 @@ tinygltf::Model MODLoader::toGlTF2(const std::string & relPathToRoot)
         for (Point normal : subMesh.second.Normals)
         {
             char* x = static_cast<char*>((void*)&normal.x);
-            char* y = static_cast<char*>((void*)&normal.z);
-            char* z = static_cast<char*>((void*)&normal.y); //we flip z and y to have y up
+            char* y = static_cast<char*>((void*)&normal.y);
+            char* z = static_cast<char*>((void*)&normal.z);
 
             buffer.data.push_back(x[0]);
             buffer.data.push_back(x[1]);
