@@ -5,6 +5,15 @@ struct Point
     float x;
     float y;
     float z;
+
+    Point toRightHandedYup() const
+    {
+        Point ret;
+        ret.x = -this->x;
+        ret.y = this->z;
+        ret.z = this->y;
+        return ret;
+    }
 };
 struct Vector
 {
